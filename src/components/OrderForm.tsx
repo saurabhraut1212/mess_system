@@ -8,6 +8,8 @@ interface MenuItem {
   _id: string;
   name: string;
   price: number;
+  avgRating: number;
+  totalReviews: number;
 }
 
 interface OrderItem {
@@ -15,6 +17,8 @@ interface OrderItem {
   quantity: number;
   instructions?: string;
   addons?: string[];
+  avgRating: number;
+  totalReviews: number;
 }
 
 interface OrderFormProps {
@@ -40,7 +44,6 @@ const OrderSchema = Yup.object().shape({
 });
 
 export default function OrderForm({ menuItems, onSuccess }: OrderFormProps) {
-    console.log(menuItems,"menuItems");
   const handleSubmit = async (values: OrderFormValues, { setSubmitting }: FormikHelpers<OrderFormValues>) => {
     try {
       const token = localStorage.getItem('token');
@@ -77,7 +80,8 @@ export default function OrderForm({ menuItems, onSuccess }: OrderFormProps) {
       <h2 className="text-2xl font-bold mb-6 text-center">Place Order</h2>
       <Formik<OrderFormValues>
   initialValues={{
-    items: menuItems.map(item => ({ menuId: item._id, quantity: 1, instructions: '', addons: [] })),
+    items: menuItems.map(item => ({ menuId: item._id, quantity: 1, instructions: '', addons: [], avgRating: item.avgRating ?? 0,
+  totalReviews: item.totalReviews ?? 0, })),
   }}
   validationSchema={OrderSchema}
   onSubmit={handleSubmit}
@@ -108,6 +112,15 @@ export default function OrderForm({ menuItems, onSuccess }: OrderFormProps) {
                     className="text-red-500 text-sm"
                   />
                 </div>
+                <p className="text-sm text-gray-600">
+                {item.avgRating && item.avgRating > 0 ? (
+                    <>
+                    ⭐ {item.avgRating.toFixed(1)} ({item.totalReviews ?? 0} reviews)
+                    </>
+                ) : (
+                    <span>No ratings yet</span>
+                )}
+                </p>
                 <div>
                   <Field
                     placeholder="Instructions"

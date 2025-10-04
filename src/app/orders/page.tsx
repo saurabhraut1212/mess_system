@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import OrderForm from '@/components/OrderForm';
+import FeedbackForm from '@/components/FeedbackForm';
 import toast, { Toaster } from 'react-hot-toast';
 
 interface MenuItem {
@@ -11,6 +12,8 @@ interface MenuItem {
   description?: string;
   category?: string;
   dietaryInfo?: string;
+  avgRating: number;
+  totalReviews: number;
   date: string;
 }
 
@@ -63,6 +66,7 @@ export default function OrdersPage() {
     fetchOrders();
   }, []);
 
+  console.log(orders,"orders");
   return (
     <div className="p-6">
       <Toaster position="top-right" />
@@ -82,6 +86,19 @@ export default function OrdersPage() {
                 </div>
               ))}
             </div>
+             {/* ✅ Show feedback form only for delivered orders */}
+            {order.status === 'delivered' && (
+            <div className="mt-4">
+                <FeedbackForm
+                menuId={order.items[0].menuId._id}
+                orderId={order._id}
+                onSuccess={() => {
+                    toast.success('Thank you for your feedback!');
+                    fetchOrders(); // refresh after feedback
+                }}
+                />
+            </div>
+            )}
           </div>
         ))}
       </div>
