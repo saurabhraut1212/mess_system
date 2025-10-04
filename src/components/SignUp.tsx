@@ -38,7 +38,7 @@ export default function SignupForm() {
     if (res.ok) {
       toast.success(data.message || 'Signup successful!');
       resetForm();
-      router.push('/login');
+      router.push('/auth/signin');
     } else {
       toast.error(data.error || 'Something went wrong');
     }
@@ -103,7 +103,7 @@ export default function SignupForm() {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         Already registered?{' '}
-        <Link href="/login" className="text-blue-500 hover:underline">
+        <Link href="/auth/signin" className="text-blue-500 hover:underline">
           Go to login
         </Link>
       </p>

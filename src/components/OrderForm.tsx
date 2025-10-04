@@ -40,6 +40,7 @@ const OrderSchema = Yup.object().shape({
 });
 
 export default function OrderForm({ menuItems, onSuccess }: OrderFormProps) {
+    console.log(menuItems,"menuItems");
   const handleSubmit = async (values: OrderFormValues, { setSubmitting }: FormikHelpers<OrderFormValues>) => {
     try {
       const token = localStorage.getItem('token');
@@ -75,50 +76,66 @@ export default function OrderForm({ menuItems, onSuccess }: OrderFormProps) {
       <Toaster position="top-right" />
       <h2 className="text-2xl font-bold mb-6 text-center">Place Order</h2>
       <Formik<OrderFormValues>
-        initialValues={{
-          items: menuItems.map(item => ({ menuId: item._id, quantity: 1, instructions: '', addons: [] })),
-        }}
-        validationSchema={OrderSchema}
-        onSubmit={handleSubmit}
+  initialValues={{
+    items: menuItems.map(item => ({ menuId: item._id, quantity: 1, instructions: '', addons: [] })),
+  }}
+  validationSchema={OrderSchema}
+  onSubmit={handleSubmit}
+  enableReinitialize // important if menuItems come asynchronously
+>
+  {({ isSubmitting, values }) => (
+    <Form className="space-y-4">
+      <FieldArray name="items">
+        {() =>
+          values.items.map((item, index) => {
+            const menu = menuItems.find(m => m._id === item.menuId);
+            if (!menu) return null; // skip if menu not loaded yet
+
+            return (
+              <div key={menu._id} className="border p-4 rounded space-y-2">
+                <h3 className="font-bold">{menu.name}</h3>
+                <p>Price: ₹{menu.price}</p>
+                <div className="flex gap-2 items-center">
+                  <label>Quantity:</label>
+                  <Field
+                    type="number"
+                    name={`items.${index}.quantity`}
+                    className="w-16 p-1 border rounded"
+                  />
+                  <ErrorMessage
+                    name={`items.${index}.quantity`}
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+                <div>
+                  <Field
+                    placeholder="Instructions"
+                    name={`items.${index}.instructions`}
+                    className="w-full p-2 border rounded"
+                  />
+                  <ErrorMessage
+                    name={`items.${index}.instructions`}
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+              </div>
+            );
+          })
+        }
+      </FieldArray>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
       >
-        {({ isSubmitting, values }) => (
-          <Form className="space-y-4">
-            <FieldArray name="items">
-              {() =>
-                values.items.map((item, index) => {
-                  const menu = menuItems.find(m => m._id === item.menuId);
-                  return (
-                    <div key={item.menuId} className="border p-4 rounded space-y-2">
-                      <h3 className="font-bold">{menu?.name}</h3>
-                      <p>Price: ₹{menu?.price}</p>
-                      <div className="flex gap-2 items-center">
-                        <label>Quantity:</label>
-                        <Field type="number" name={`items.${index}.quantity`} className="w-16 p-1 border rounded" />
-                        <ErrorMessage name={`items.${index}.quantity`} component="div" className="text-red-500 text-sm" />
-                      </div>
-                      <div>
-                        <Field
-                          placeholder="Instructions"
-                          name={`items.${index}.instructions`}
-                          className="w-full p-2 border rounded"
-                        />
-                        <ErrorMessage name={`items.${index}.instructions`} component="div" className="text-red-500 text-sm" />
-                      </div>
-                    </div>
-                  );
-                })
-              }
-            </FieldArray>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
-            >
-              {isSubmitting ? 'Placing...' : 'Place Order'}
-            </button>
-          </Form>
-        )}
-      </Formik>
+        {isSubmitting ? 'Placing...' : 'Place Order'}
+      </button>
+    </Form>
+  )}
+</Formik>
+
     </div>
   );
 }

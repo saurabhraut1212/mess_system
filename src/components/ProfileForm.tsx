@@ -3,6 +3,7 @@
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const ProfileSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too Short!').required('Name is required'),
@@ -25,6 +26,7 @@ interface ProfileFormProps {
 }
 
 export default function ProfileForm({ initialValues }: ProfileFormProps) {
+    const router = useRouter();
   const handleSubmit = async (
     values: ProfileValues,
     { setSubmitting }: FormikHelpers<ProfileValues>
@@ -44,6 +46,8 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
 
       if (res.ok) {
         toast.success(data.message || 'Profile updated!');
+        router.push('/orders')
+
       } else {
         toast.error(data.error || 'Update failed');
       }

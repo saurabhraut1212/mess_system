@@ -26,6 +26,7 @@ export default function AdminOrderList() {
 
   useEffect(() => { fetchOrders(); }, []);
 
+  console.log(orders, "orders");
   const updateStatus = async (orderId: string, status: string) => {
     const token = localStorage.getItem('token');
     const res = await fetch('/api/orders/update-status', {
