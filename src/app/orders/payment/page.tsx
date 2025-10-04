@@ -3,14 +3,23 @@
 import PaymentForm from '@/components/PaymentForm';
 import { useSearchParams, useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 
 export default function PaymentPage() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId') || '';
+  const orderIdParam = searchParams.get('orderId');
+  const [orderId, setOrderId] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    if (!orderIdParam) {
+      toast.error('Order ID missing');
+    } else {
+      setOrderId(orderIdParam);
+    }
+  }, [orderIdParam]);
+
   if (!orderId) {
-    toast.error('Order ID missing');
     return <p className="text-center mt-10">Invalid order</p>;
   }
 
