@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: -1 }).lean();
     }
 
+    console.log(orders,'orders in api');
     return NextResponse.json(orders);
   } catch (err) {
     console.error('Error fetching orders:', err);
