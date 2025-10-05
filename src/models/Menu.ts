@@ -4,9 +4,9 @@ export interface IMenu extends Document {
   name: string;
   description?: string;
   price: number;
-  category?: string; // e.g., Breakfast, Lunch, Dinner
-  dietaryInfo?: string; // e.g., Vegan, Gluten-free
-  date: Date; // For which day this menu is
+  category?: string;
+  dietaryInfo?: string; 
+  date: Date; 
   createdAt: Date;
   updatedAt: Date;
 }

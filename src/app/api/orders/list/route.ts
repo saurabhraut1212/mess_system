@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
+import '@/models/Menu';
 import Order from '@/models/Order';
+
 import { verifyToken } from '@/lib/auth';
 
 interface DecodedToken {
