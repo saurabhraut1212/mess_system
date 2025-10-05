@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {connectDB} from '@/lib/db';
 import { verifyToken } from '@/lib/auth';
 import DeliveryAssignment from '@/models/DeliveryAssignment';
+import Notification from '@/models/Notification';
 
 interface DecodedToken {
   id: string;
@@ -34,6 +35,13 @@ export async function POST(req: NextRequest) {
       order: orderId,
       deliveryBoy: deliveryBoyId,
       status: 'assigned',
+    });
+
+    await Notification.create({
+    user: deliveryBoyId,
+    title: 'New Delivery Assigned',
+    message: `You’ve been assigned to deliver Order #${orderId.slice(-6)}`,
+    type: 'delivery',
     });
 
     return NextResponse.json({ message: 'Order assigned successfully', assignment });

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Order from '@/models/Order';
 import { verifyToken } from '@/lib/auth';
+import Notification from '@/models/Notification';
+import User from '@/models/User';
 
 interface DecodedToken {
   id: string;
@@ -53,6 +55,25 @@ export async function POST(req: NextRequest) {
       totalPrice,
       status: 'pending',
     });
+
+      // ✅ Create notification for user
+    await Notification.create({
+      user: decoded.id,
+      title: 'Order Placed Successfully',
+      message: 'Your order has been placed and is pending approval.',
+      type: 'order',
+    });
+
+    // ✅ Create notification for all admins
+    const admins = await User.find({ role: 'admin' });
+    for (const admin of admins) {
+      await Notification.create({
+        user: admin._id,
+        title: 'New Order Received',
+        message: `A new order has been placed by ${decoded.email}.`,
+        type: 'order',
+      });
+    }
 
     return NextResponse.json(
       { message: 'Order placed successfully', order: newOrder },

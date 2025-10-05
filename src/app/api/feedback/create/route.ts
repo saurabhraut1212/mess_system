@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import {connectDB} from '@/lib/db';
 import Feedback from '@/models/Feedback';
 import { verifyToken } from '@/lib/auth';
+import Notification from '@/models/Notification';
+import User from '@/models/User';
 
 interface DecodedToken {
   id: string;
   role: string;
+  email: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -41,6 +44,23 @@ export async function POST(req: NextRequest) {
       rating,
       comment,
     });
+
+    await Notification.create({
+    user: decoded.id,
+    title: 'Thank You for Your Feedback!',
+    message: 'Your feedback has been submitted successfully.',
+    type: 'feedback',
+    });
+
+    const admins = await User.find({ role: 'admin' });
+    for (const admin of admins) {
+    await Notification.create({
+        user: admin._id,
+        title: 'New Feedback Received',
+        message: `A user (${decoded.email}) has submitted feedback.`,
+        type: 'feedback',
+    });
+    }
 
     return NextResponse.json(
       { message: 'Feedback submitted successfully', feedback },

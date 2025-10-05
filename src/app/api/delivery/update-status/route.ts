@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {connectDB} from '@/lib/db';
 import { verifyToken } from '@/lib/auth';
 import DeliveryAssignment from '@/models/DeliveryAssignment';
+import Notification from '@/models/Notification';
 
 interface DecodedToken {
   id: string;
@@ -34,6 +35,13 @@ export async function PATCH(req: NextRequest) {
       { status },
       { new: true }
     );
+
+    await Notification.create({
+    user: assignmentId.user,
+    title: 'Delivery Update',
+    message: `Your order is now ${status}.`,
+    type: 'delivery',
+    });
 
     return NextResponse.json({ message: 'Status updated', updated });
   } catch (err) {

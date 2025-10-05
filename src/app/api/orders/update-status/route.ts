@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {connectDB} from '@/lib/db';
 import Order from '@/models/Order';
 import { verifyToken } from '@/lib/auth';
+import Notification from '@/models/Notification';
 
 interface DecodedToken {
     id: string;
@@ -24,6 +25,13 @@ export async function PATCH(req: NextRequest) {
 
     order.status = status;
     await order.save();
+
+    await Notification.create({
+    user: order.user,
+    title: 'Order Status Updated',
+    message: `Your order status changed to ${status}.`,
+    type: 'order',
+    });
 
     return NextResponse.json({ message: 'Order status updated', order });
   } catch (err) {
