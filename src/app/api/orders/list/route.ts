@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
    const token = authHeader.split(' ')[1];
    const decoded = verifyToken(token) as DecodedToken;
 
-   console.log(decoded,"decoded");
 
     const orders = await Order.find({user:decoded.id}).populate('items.menuId').sort({ createdAt: -1 });
     return NextResponse.json(orders);
