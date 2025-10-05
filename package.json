@@ -13,10 +13,13 @@
     "@types/jsonwebtoken": "^9.0.10",
     "bcryptjs": "^3.0.2",
     "formik": "^2.4.6",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.0",
     "next": "14.2.33",
     "next-auth": "^4.24.11",
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.17.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.6.0",
@@ -24,7 +27,9 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@types/json2csv": "^5.0.7",
     "@types/node": "^20",
+    "@types/pdfkit": "^0.17.3",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/yup": "^0.32.0",
