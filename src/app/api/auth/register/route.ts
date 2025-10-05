@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import {connectDB} from '@/lib/db';
 import User from '@/models/User';
 import { hashPassword } from '@/lib/auth';
-import { initAdmin } from '@/utils/initAdmin';
+import { createDelivery, initAdmin } from '@/utils/initAdmin';
 
 export async function POST(req: NextRequest) {
   await connectDB();
   await initAdmin(); // ensure initial admin exists
+  await createDelivery(); // ensure delivery user exists
 
   const { name, email, password } = await req.json(); 
 

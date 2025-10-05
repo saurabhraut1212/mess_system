@@ -22,3 +22,26 @@ export async function initAdmin() {
     console.log('Initial admin created');
   }
 }
+
+export async function createDelivery() {
+  await connectDB();
+
+  const existingDelivery = await User.findOne({ email: 'delivery@gmail.com' });
+  if (existingDelivery) {
+    console.log('Delivery user already exists');
+    process.exit(0);
+  }
+
+  const hashedPassword = await bcrypt.hash('delivery123', 10);
+
+  const deliveryUser = await User.create({
+    name: 'Test Delivery Boy',
+    email: 'delivery@gmail.com',
+    password: hashedPassword,
+    role: 'delivery',
+  });
+
+  console.log('✅ Delivery user created:', deliveryUser);
+}
+
+
