@@ -50,9 +50,9 @@ export default function LoginForm() {
         setAuth(data.token, data.user.role); 
 
         // role-based redirection
-        if (data.user.role === 'admin') router.push('/dashboard/orders');
+        if (data.user.role === 'admin') router.push('/dashboard');
         else if (data.user.role === 'delivery') router.push('/delivery/orders');
-        else router.push('/orders');
+        else router.push('/customer');
       } else {
         toast.error(data.error || 'Invalid credentials');
       }

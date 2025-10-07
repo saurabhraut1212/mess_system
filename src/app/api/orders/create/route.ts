@@ -1,14 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Order from '@/models/Order';
-import { verifyToken } from '@/lib/auth';
+import Menu from '@/models/Menu';
 import Notification from '@/models/Notification';
 import User from '@/models/User';
+import { verifyToken } from '@/lib/auth';
 
 interface DecodedToken {
   id: string;
   email: string;
   role: string;
+}
+
+interface OrderItemInput {
+  menuId: string;
+  quantity?: number;
+  instructions?: string;
+  addons?: string[];
 }
 
 export async function POST(req: NextRequest) {
@@ -22,7 +30,6 @@ export async function POST(req: NextRequest) {
     const token = authHeader.split(' ')[1];
     const decoded = verifyToken(token) as DecodedToken;
 
-    // ✅ Allow only 'user' role to place orders
     if (decoded.role !== 'customer') {
       return NextResponse.json(
         { error: 'Access denied: only users can place orders' },
@@ -30,33 +37,41 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ✅ Validate body structure
     const body = await req.json();
     const { items, totalPrice } = body;
 
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json(
-        { error: 'Order must contain at least one item' },
-        { status: 400 }
-      );
-    }
+    if (!items || !Array.isArray(items) || items.length === 0)
+      return NextResponse.json({ error: 'Order must contain at least one item' }, { status: 400 });
 
-    if (!totalPrice || typeof totalPrice !== 'number') {
-      return NextResponse.json(
-        { error: 'Invalid total price' },
-        { status: 400 }
-      );
-    }
+    if (!totalPrice || typeof totalPrice !== 'number')
+      return NextResponse.json({ error: 'Invalid total price' }, { status: 400 });
 
-    // ✅ Create order
+    // ✅ Fetch menu names for all items
+    const itemDetails = await Promise.all(
+    (items as OrderItemInput[]).map(async (item) => {
+      const menu = await Menu.findById(item.menuId).select("name");
+      if (!menu) throw new Error(`Menu not found: ${item.menuId}`);
+
+      return {
+        menuId: item.menuId,
+        menuName: menu.name,
+        quantity: item.quantity ?? 1,
+        instructions: item.instructions ?? "",
+        addons: item.addons ?? [],
+      };
+    })
+  );
+
+
+    // ✅ Create order with embedded menu names
     const newOrder = await Order.create({
       user: decoded.id,
-      items,
+      items: itemDetails,
       totalPrice,
       status: 'pending',
     });
 
-      // ✅ Create notification for user
+    // ✅ Create user notification
     await Notification.create({
       user: decoded.id,
       title: 'Order Placed Successfully',
@@ -64,7 +79,7 @@ export async function POST(req: NextRequest) {
       type: 'order',
     });
 
-    // ✅ Create notification for all admins
+    // ✅ Notify all admins
     const admins = await User.find({ role: 'admin' });
     for (const admin of admins) {
       await Notification.create({
@@ -80,7 +95,7 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (err) {
-    console.error('Order creation error:', err);
+    console.log(err)
     return NextResponse.json(
       { error: 'Server error while placing order' },
       { status: 500 }

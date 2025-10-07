@@ -23,16 +23,18 @@ export default function Navbar() {
   const navLinks =
     role === "admin"
       ? [
-          { name: "Home", path: "/" },
-          { name: "Dashboard", path: "/dashboard/orders" },
+          { name: "Home", path: "/dashboard" },
+          { name: "Orders", path: "/dashboard/orders" },
           { name: "Menu", path: "/dashboard/menu" },
           { name: "Notifications", path: "/notifications" },
+          { name: "Analytics", path: "/dashboard/analytics" },
         ]
       : role === "customer"
       ? [
-          { name: "Home", path: "/" },
-          { name: "Menu", path: "/menu" },
-          { name: "My Orders", path: "/orders" },
+          { name: "Home", path: "/customer" },
+          // { name: "Menu", path: "/menu" },
+          { name: "My Orders", path: "/customer/orders" },
+            { name: "Notifications", path: "/notifications" },
           { name: "Profile", path: "/profile" },
         ]
       : role === "delivery"

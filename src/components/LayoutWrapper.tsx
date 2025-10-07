@@ -7,22 +7,29 @@ import Footer from "@/components/Footer";
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Define routes where Footer should be hidden
+  // ✅ Routes where footer should be hidden
   const hideFooterRoutes = [
     "/signin",
     "/signup",
-    "/dashboard",
     "/orders",
     "/profile",
     "/delivery",
     "/menu",
   ];
 
-  const shouldHideFooter = hideFooterRoutes.some((route) =>
+  // ✅ Hide footer if route starts with these
+  const shouldHideFooterBase = hideFooterRoutes.some((route) =>
     pathname.startsWith(route)
   );
 
-  // Define routes where Navbar should be hidden (auth pages)
+  // ✅ Hide footer on dashboard subroutes like /dashboard/orders, /dashboard/menu, etc.
+  const isDashboardSubRoute =
+    pathname.startsWith("/dashboard/") && pathname !== "/dashboard";
+
+  // ✅ Final footer visibility condition
+  const shouldHideFooter = shouldHideFooterBase || isDashboardSubRoute;
+
+  // ✅ Hide navbar on auth routes
   const hideNavbarRoutes = ["/signin", "/signup"];
   const shouldHideNavbar = hideNavbarRoutes.some((route) =>
     pathname.startsWith(route)
