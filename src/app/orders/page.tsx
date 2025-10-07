@@ -80,9 +80,9 @@ export default function OrdersPage() {
             <p><strong>Total:</strong> ₹{order.totalPrice}</p>
             <div className="mt-2">
               {order.items.map((item) => (
-                <div key={item.menuId._id} className="border-t pt-2 mt-2">
-                  <p>{item.menuId.name} x {item.quantity}</p>
-                  {item.instructions && <p>Instructions: {item.instructions}</p>}
+                <div key={item?.menuId?._id} className="border-t pt-2 mt-2">
+                  <p>{item.menuId?.name} x {item?.quantity}</p>
+                  {item?.instructions && <p>Instructions: {item?.instructions}</p>}
                 </div>
               ))}
             </div>

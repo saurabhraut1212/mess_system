@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="flex flex-col justify-between h-full text-center md:text-left">
           <div>
             <h2 className="text-2xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2 text-[#4A6FA5]">
-              🍱 Tiffin Mess
+              Tiffin Mess
             </h2>
             <p className="text-sm text-gray-700 leading-relaxed max-w-sm mx-auto md:mx-0">
               Fresh, hygienic, and affordable home-cooked meals delivered daily.

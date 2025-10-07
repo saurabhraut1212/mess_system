@@ -26,7 +26,7 @@ export default function Navbar() {
           { name: "Home", path: "/" },
           { name: "Dashboard", path: "/dashboard/orders" },
           { name: "Menu", path: "/dashboard/menu" },
-          { name: "Notifications", path: "/dashboard/notifications" },
+          { name: "Notifications", path: "/notifications" },
         ]
       : role === "customer"
       ? [
@@ -59,7 +59,7 @@ export default function Navbar() {
             isHomePage ? "text-[#4A6FA5]" : "text-white"
           }`}
         >
-          <span className="hidden sm:inline">🍱 Tiffin Mess</span>
+          <span className="hidden sm:inline">Tiffin Mess</span>
         </Link>
 
         {/* Desktop Menu */}
