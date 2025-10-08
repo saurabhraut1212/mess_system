@@ -42,7 +42,7 @@ export default function NotificationsPage() {
   return (
     <div className="p-6">
       <Toaster position="top-right" />
-      <h1 className="text-3xl font-bold mb-6">🔔 Notifications</h1>
+      <h1 className="text-2xl font-bold mb-6">Notifications</h1>
 
       <div className="space-y-4">
         {notifications.length === 0 ? (

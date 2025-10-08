@@ -26,6 +26,7 @@ export default function Navbar() {
           { name: "Home", path: "/dashboard" },
           { name: "Orders", path: "/dashboard/orders" },
           { name: "Menu", path: "/dashboard/menu" },
+          {name:"MenuList",path:"/dashboard/menulist"},
           { name: "Notifications", path: "/notifications" },
           { name: "Analytics", path: "/dashboard/analytics" },
         ]
@@ -38,7 +39,14 @@ export default function Navbar() {
           { name: "Profile", path: "/profile" },
         ]
       : role === "delivery"
-      ? [{ name: "My Deliveries", path: "/delivery/orders" }]
+      ? [
+          { name: "Home", path: "/delivery" },
+        { name: "My Deliveries", path: "/delivery/orders" },
+        { name: "Notifications", path: "/notifications" },
+        { name: "Profile", path: "/profile" },
+
+
+      ]
       : [
           { name: "Home", path: "/" },
           { name: "About", path: "/about" },

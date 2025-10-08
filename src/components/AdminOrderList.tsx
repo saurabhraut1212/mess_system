@@ -12,7 +12,7 @@ interface OrderItem {
   totalPrice: number;
 }
 
-const statuses = ['pending','preparing','out-for-delivery','delivered','cancelled'];
+const statuses = ['pending','delivered','cancelled'];
 
 export default function AdminOrderList() {
   const { token } = useAuth();
@@ -66,10 +66,11 @@ export default function AdminOrderList() {
     );
   }
 
+
   return (
     <div className="p-6">
       <Toaster position="top-right" />
-      <h2 className="text-2xl font-bold mb-4">Admin: Manage Orders</h2>
+      <h2 className="text-2xl font-bold mb-4">Manage Orders</h2>
 
       {orders.length === 0 ? (
         <p>No orders found.</p>
@@ -77,7 +78,7 @@ export default function AdminOrderList() {
         <div className="space-y-4">
           {orders.map(order => (
             <div key={order._id} className="border p-4 rounded shadow">
-              <p><strong>User:</strong> {order.user.name} ({order.user.email})</p>
+              <p><strong>User:</strong> {order.user.name}</p>
               <p><strong>Total:</strong> ₹{order.totalPrice}</p>
               <p><strong>Status:</strong> {order.status}</p>
 
@@ -99,10 +100,6 @@ export default function AdminOrderList() {
                     className={`px-3 py-1 rounded text-white ${
                       statusOption === 'pending'
                         ? 'bg-gray-500'
-                        : statusOption === 'preparing'
-                        ? 'bg-yellow-500'
-                        : statusOption === 'out-for-delivery'
-                        ? 'bg-blue-500'
                         : statusOption === 'delivered'
                         ? 'bg-green-500'
                         : 'bg-red-500'

@@ -13,7 +13,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     "/signup",
     "/orders",
     "/profile",
-    "/delivery",
     "/menu",
   ];
 
@@ -26,8 +25,10 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const isDashboardSubRoute =
     pathname.startsWith("/dashboard/") && pathname !== "/dashboard";
 
+  const isDeliverySubRoute =
+    pathname.startsWith("/delivery/") && pathname !== "/delivery";
   // ✅ Final footer visibility condition
-  const shouldHideFooter = shouldHideFooterBase || isDashboardSubRoute;
+  const shouldHideFooter = shouldHideFooterBase || isDashboardSubRoute || isDeliverySubRoute;
 
   // ✅ Hide navbar on auth routes
   const hideNavbarRoutes = ["/signin", "/signup"];

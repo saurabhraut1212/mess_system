@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import '@/models/Menu';
+import '@/models/User';
 import Order from '@/models/Order';
 
 import { verifyToken } from '@/lib/auth';
@@ -33,6 +34,7 @@ export async function GET(req: NextRequest) {
       // Fetch all orders (admin / manager)
       orders = await Order.find()
         .populate('items.menuId')
+        .populate('user', 'name email') 
         .sort({ createdAt: -1 }).lean();
     }
 

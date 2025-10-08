@@ -57,7 +57,7 @@ export default function NotificationList({
   return (
     <div className={`${compact ? 'w-80' : 'w-full p-4'} bg-white rounded shadow`}>
       <Toaster position="top-right" />
-      {!compact && <h2 className="text-xl font-semibold mb-4">🔔 Notifications</h2>}
+      {!compact && <h2 className="text-2xl font-bold mb-4">Notifications</h2>}
 
       {notifications.length === 0 ? (
         <p className="text-gray-500 text-sm text-center">No notifications yet</p>
