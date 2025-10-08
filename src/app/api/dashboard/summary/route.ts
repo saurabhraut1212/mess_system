@@ -31,7 +31,11 @@ export async function GET(req: NextRequest) {
     // Orders & revenue
     const orders = await Order.find().lean();
     const totalOrders = orders.length;
-    const totalRevenue = orders.reduce((sum, ord) => sum + (ord.totalPrice || 0), 0);
+    // ✅ Include only delivered orders in totalRevenue
+    const totalRevenue = orders
+    .filter((ord) => ord.status === 'delivered')
+    .reduce((sum, ord) => sum + (ord.totalPrice || 0), 0);
+
 
     // Recent activity (last 5 orders/menus/users)
     const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5).lean();

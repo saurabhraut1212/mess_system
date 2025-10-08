@@ -176,9 +176,7 @@ export default function MenuListPage() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <Toaster position="top-right" />
-      <h2 className="text-2xl font-bold mt-10 mb-6 text-gray-800 text-center">
-        Manage Menus / Meals
-      </h2>
+     
       {renderSection('Yesterday’s Menu', yesterdayMenus)}
       {renderSection('Today’s Menu', todayMenus)}
       {renderSection('Tomorrow’s Menu', tomorrowMenus)}

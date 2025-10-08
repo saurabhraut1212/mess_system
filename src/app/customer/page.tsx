@@ -54,6 +54,7 @@ export default function CustomerDashboardPage() {
 
   if (loading) return <p className="text-center p-6">Loading dashboard...</p>;
   if (!data) return <p className="text-center p-6">No data available</p>;
+ 
 
   const today = new Date().toLocaleDateString("en-IN", {
     weekday: "long",

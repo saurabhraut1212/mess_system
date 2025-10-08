@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Order from "@/models/Order";
+import Feedback from "@/models/Feedback";
 import { verifyToken } from "@/lib/auth";
 
-// ---------------------------
-// 🔹 Type Definitions
-// ---------------------------
 interface DecodedToken {
   id: string;
   email: string;
@@ -18,22 +16,18 @@ interface PopulatedMenu {
 }
 
 interface OrderItem {
-  menuId: PopulatedMenu | null; // populated field or null if missing
+  menuId: PopulatedMenu | null;
   quantity: number;
 }
 
 interface OrderDoc {
   _id: string;
   totalPrice: number;
-  rating?: number;
   status?: string;
   createdAt: string;
   items: OrderItem[];
 }
 
-// ---------------------------
-// 🔹 API Handler
-// ---------------------------
 export async function GET(req: NextRequest) {
   await connectDB();
 
@@ -45,22 +39,30 @@ export async function GET(req: NextRequest) {
     const token = authHeader.split(" ")[1];
     const decoded = verifyToken(token) as DecodedToken;
 
-    // ✅ Fetch user's orders (with populated menu names)
+    // ✅ Fetch user's orders
     const orders = (await Order.find({ user: decoded.id })
       .populate("items.menuId", "name")
       .sort({ createdAt: -1 })
       .lean()) as unknown as OrderDoc[];
 
+    // ✅ Fetch user's feedbacks
+    const feedbacks = await Feedback.find({ user: decoded.id }).lean();
+
     // ✅ Basic summaries
     const totalOrders = orders.length;
-    const totalSpent = orders.reduce(
-      (sum, order) => sum + (order.totalPrice || 0),
-      0
-    );
 
+    // ✅ Exclude cancelled orders from spending
+  // ✅ Include only delivered orders in totalSpent
+    const totalSpent = orders
+    .filter((order) => order.status === "delivered")
+    .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+
+    // ✅ Calculate avg rating from feedbacks
     const avgRating =
-      orders.length > 0
-        ? orders.reduce((sum, o) => sum + (o.rating || 0), 0) / orders.length
+      feedbacks.length > 0
+        ? feedbacks.reduce((sum, fb) => sum + fb.rating, 0) /
+          feedbacks.length
         : 0;
 
     // ✅ Favorite Meal Calculation

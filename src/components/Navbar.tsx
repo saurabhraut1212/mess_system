@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useAuth } from "@/context/AuthContext"; // ✅ Import global context
+import { useAuth } from "@/context/AuthContext"; 
 
 export default function Navbar() {
-  const { token, role, logout } = useAuth(); // ✅ Get from context
+  const { token, role, logout } = useAuth(); 
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -15,38 +15,36 @@ export default function Navbar() {
   const isHomePage = pathname === "/";
 
   const handleLogout = () => {
-    logout(); // ✅ Clear auth context + localStorage
+    logout();
     router.push("/");
   };
 
-  // ✅ Role-based navigation links
+ 
   const navLinks =
     role === "admin"
       ? [
           { name: "Home", path: "/dashboard" },
           { name: "Orders", path: "/dashboard/orders" },
           { name: "Menu", path: "/dashboard/menu" },
-          {name:"MenuList",path:"/dashboard/menulist"},
+          { name: "MenuList", path: "/dashboard/menulist" },
           { name: "Notifications", path: "/notifications" },
           { name: "Analytics", path: "/dashboard/analytics" },
         ]
       : role === "customer"
       ? [
           { name: "Home", path: "/customer" },
-          // { name: "Menu", path: "/menu" },
+          { name: "Menu", path: "/customer/menus" },
           { name: "My Orders", path: "/customer/orders" },
-            { name: "Notifications", path: "/notifications" },
+          { name: "Notifications", path: "/notifications" },
           { name: "Profile", path: "/profile" },
         ]
       : role === "delivery"
       ? [
           { name: "Home", path: "/delivery" },
-        { name: "My Deliveries", path: "/delivery/orders" },
-        { name: "Notifications", path: "/notifications" },
-        { name: "Profile", path: "/profile" },
-
-
-      ]
+          { name: "My Deliveries", path: "/delivery/orders" },
+          { name: "Notifications", path: "/notifications" },
+          { name: "Profile", path: "/profile" },
+        ]
       : [
           { name: "Home", path: "/" },
           { name: "About", path: "/about" },
@@ -79,9 +77,7 @@ export default function Navbar() {
               key={link.name}
               href={link.path}
               className={`font-medium text-sm uppercase tracking-wide transition-all duration-200 ${
-                isHomePage
-                  ? "hover:text-[#4A6FA5]"
-                  : "hover:text-yellow-200"
+                isHomePage ? "hover:text-[#4A6FA5]" : "hover:text-yellow-200"
               }`}
             >
               {link.name}

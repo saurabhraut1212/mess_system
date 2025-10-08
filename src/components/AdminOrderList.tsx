@@ -70,7 +70,6 @@ export default function AdminOrderList() {
   return (
     <div className="p-6">
       <Toaster position="top-right" />
-      <h2 className="text-2xl font-bold mb-4">Manage Orders</h2>
 
       {orders.length === 0 ? (
         <p>No orders found.</p>

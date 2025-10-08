@@ -43,7 +43,7 @@ export default function SignupForm() {
       if (res.ok) {
         toast.success(data.message || "Signup successful!");
         resetForm();
-        router.push("/auth/signin");
+        router.push("/signin");
       } else {
         toast.error(data.error || "Something went wrong");
       }
