@@ -35,7 +35,7 @@ export default function ReportsPage() {
   return (
     <div className="p-6">
       <Toaster position="top-right" />
-      <h1 className="text-3xl font-bold mb-6 text-center">📑 Reports Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Reports</h1>
      <div className="grid md:grid-cols-3 gap-6">
   {['orders', 'feedback', 'revenue'].map((type) => (
     <div key={type} className="bg-white shadow p-4 rounded text-center">

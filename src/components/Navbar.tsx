@@ -28,6 +28,7 @@ export default function Navbar() {
           { name: "Menu", path: "/dashboard/menu" },
           { name: "MenuList", path: "/dashboard/menulist" },
           { name: "Notifications", path: "/notifications" },
+          {name:"Reports", path:"/dashboard/reports"},
           { name: "Analytics", path: "/dashboard/analytics" },
         ]
       : role === "customer"
