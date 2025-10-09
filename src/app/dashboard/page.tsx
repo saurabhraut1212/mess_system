@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
       <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-2 sm:mb-0">
-            🕒 Recent Activity
+            Recent Activity
           </h2>
           <span className="text-sm text-gray-400">
             Last {data.recentItems.length} records

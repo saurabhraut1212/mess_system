@@ -7,9 +7,21 @@ export async function GET() {
   await connectDB();
 
   try {
-    const menus = await Menu.find().sort({ date: 1 }).lean();
+    // ✅ Get current date (00:00 to 23:59)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    // Optional: Aggregate ratings (if feedback model exists)
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    // ✅ Fetch only today's menus
+    const menus = await Menu.find({
+      date: { $gte: today, $lt: tomorrow },
+    })
+      .sort({ date: 1 })
+      .lean();
+
+    // ✅ Aggregate ratings from Feedback
     const ratings = await Feedback.aggregate([
       {
         $group: {
@@ -20,6 +32,7 @@ export async function GET() {
       },
     ]);
 
+    // ✅ Map ratings to menu
     const ratingMap = new Map(
       ratings.map((r) => [
         r._id.toString(),
@@ -35,7 +48,7 @@ export async function GET() {
 
     return NextResponse.json(menusWithRatings);
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching today’s menus:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
