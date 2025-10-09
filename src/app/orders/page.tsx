@@ -27,7 +27,7 @@ interface OrderItem {
 interface Order {
   _id: string;
   items: OrderItem[];
-  status: 'pending' | 'preparing' | 'out-for-delivery' | 'delivered' | 'cancelled';
+  status: 'pending' | 'delivered' | 'cancelled';
   totalPrice: number;
 }
 
