@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
     // ✅ Exclude cancelled orders from spending
   // ✅ Include only delivered orders in totalSpent
     const totalSpent = orders
-    .filter((order) => order.status === "delivered")
+    .filter((order) => order.status === "delivered" || order.status === "assigned" || order.status === "accepted")
     .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
 

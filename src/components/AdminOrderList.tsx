@@ -143,46 +143,51 @@ export default function AdminOrderList() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <Toaster position="top-right" />
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Manage Orders</h2>
+     
 
       {/* ✅ Filter Section */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <select
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value as 'date' | 'month' | 'year')}
-          className="border p-2 rounded bg-white"
-        >
-          <option value="date">By Date</option>
-          <option value="month">By Month</option>
-          <option value="year">By Year</option>
-        </select>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Manage Orders</h2>
+        <div className="flex gap-3 flex-wrap">
+          {/* Filter Type */}
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value as 'date' | 'month' | 'year')}
+            className="border p-2 rounded bg-white"
+          >
+            <option value="date">By Date</option>
+            <option value="month">By Month</option>
+            <option value="year">By Year</option>
+          </select>
 
-        {filterType === 'date' && (
-          <input
-            type="date"
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-            className="border p-2 rounded bg-white"
-          />
-        )}
-        {filterType === 'month' && (
-          <input
-            type="month"
-            value={filterValue.slice(0, 7)}
-            onChange={(e) => setFilterValue(e.target.value)}
-            className="border p-2 rounded bg-white"
-          />
-        )}
-        {filterType === 'year' && (
-          <input
-            type="number"
-            min="2000"
-            max="2100"
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-            className="border p-2 rounded bg-white w-28"
-          />
-        )}
+          {/* Filter Value (Dynamic Input) */}
+          {filterType === 'date' && (
+            <input
+              type="date"
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+              className="border p-2 rounded bg-white"
+            />
+          )}
+          {filterType === 'month' && (
+            <input
+              type="month"
+              value={filterValue.slice(0, 7)}
+              onChange={(e) => setFilterValue(e.target.value)}
+              className="border p-2 rounded bg-white"
+            />
+          )}
+          {filterType === 'year' && (
+            <input
+              type="number"
+              min="2000"
+              max="2100"
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+              className="border p-2 rounded bg-white w-28"
+            />
+          )}
+        </div>
       </div>
 
       {/* ✅ Orders Display */}

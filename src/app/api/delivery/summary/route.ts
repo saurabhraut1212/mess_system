@@ -45,8 +45,9 @@ export async function GET(req: NextRequest) {
   try {
     const token = authHeader.split(" ")[1];
     const decoded = verifyToken(token) as DecodedToken;
+   
 
-    const orders = (await Order.find({ user: decoded.id })
+    const orders = (await Order.find({assignedTo: decoded.id })
       .populate("items.menuId", "name")
       .sort({ createdAt: -1 })
       .lean()) as unknown as OrderDoc[];
@@ -56,11 +57,7 @@ export async function GET(req: NextRequest) {
       (sum, o) => sum + (o.totalPrice || 0),
       0
     );
-    const avgRating =
-      orders.length > 0
-        ? orders.reduce((sum, o) => sum + (o.rating || 0), 0) / orders.length
-        : 0;
-
+   
     const mealCount: Record<string, number> = {};
     orders.forEach((order) => {
       order.items.forEach((item) => {
@@ -97,7 +94,6 @@ export async function GET(req: NextRequest) {
       summary: {
         totalOrders,
         totalSpent,
-        avgRating: Number(avgRating.toFixed(1)),
         favoriteMeal,
       },
       recentOrders,

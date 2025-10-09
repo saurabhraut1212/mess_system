@@ -4,9 +4,9 @@ import { INotification } from '@/models/Notification';
 import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
-
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchNotifications = async () => {
     const token = localStorage.getItem('token');
@@ -35,6 +35,32 @@ export default function NotificationsPage() {
     }
   };
 
+  // ✅ Clear all notifications
+  const clearAllNotifications = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/notifications/clear', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        setNotifications([]); // Clear from UI
+      } else {
+        toast.error(data.error || 'Failed to clear notifications');
+      }
+    } catch (err) {
+      console.log(err)
+      toast.error('Server error while clearing notifications');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchNotifications();
   }, []);
@@ -42,7 +68,18 @@ export default function NotificationsPage() {
   return (
     <div className="p-6">
       <Toaster position="top-right" />
-      <h1 className="text-2xl font-bold mb-6">Notifications</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Notifications</h1>
+        {notifications.length > 0 && (
+          <button
+            onClick={clearAllNotifications}
+            disabled={loading}
+            className="text-sm bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50"
+          >
+            {loading ? 'Clearing...' : 'Clear All'}
+          </button>
+        )}
+      </div>
 
       <div className="space-y-4">
         {notifications.length === 0 ? (

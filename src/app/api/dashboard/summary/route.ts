@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     const totalOrders = orders.length;
     // ✅ Include only delivered orders in totalRevenue
     const totalRevenue = orders
-    .filter((ord) => ord.status === 'delivered')
+    .filter((ord) => ord.status === 'delivered' || ord.status === 'assigned' || ord.status === 'accepted')
     .reduce((sum, ord) => sum + (ord.totalPrice || 0), 0);
 
 

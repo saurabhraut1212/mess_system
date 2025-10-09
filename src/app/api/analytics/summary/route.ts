@@ -32,11 +32,10 @@ export async function GET(req: NextRequest) {
 
     // --- Revenue Stats ---
     const totalOrders = await Order.countDocuments();
-    const totalRevenueAgg = await Order.aggregate([
-      { $match: { status: { $in: ['delivered', 'preparing'] } } },
-      { $group: { _id: null, total: { $sum: '$totalPrice' } } },
-    ]);
-    const totalRevenue = totalRevenueAgg[0]?.total || 0;
+    const orders = await Order.find();
+    const totalRevenue = orders
+    .filter((order) => order.status === "delivered" || order.status === "assigned" || order.status === "accepted")
+    .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
     // --- Orders by Status ---
     const orderStatusCounts = await Order.aggregate([
